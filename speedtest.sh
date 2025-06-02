@@ -25,10 +25,10 @@ if [ ! -f $FIRST_START_PATH ]; then
 	touch $RESULTS_PATH
 
     if [[ "${SERVER_ID}" ]]; then
-		echo "$LOG_DATE_FORMAT - Running Ookla speed test using specified server..." &> /proc/1/fd/
+		echo "$LOG_DATE_FORMAT - Running Ookla speed test using specified server..." &> /proc/1/fd/1
         speedtest --accept-license --accept-gdpr --server-id=$SERVER_ID --format=$RESULTS_FORMAT &> $RESULTS_PATH
     else
-		echo "$LOG_DATE_FORMAT - Running Ookla speed test..." &> /proc/1/fd/
+		echo "$LOG_DATE_FORMAT - Running Ookla speed test..." &> /proc/1/fd/1
         speedtest --accept-license --accept-gdpr --format=$RESULTS_FORMAT &> $RESULTS_PATH
     fi
 
@@ -39,27 +39,27 @@ if [ ! -f $FIRST_START_PATH ]; then
 	convertmbps
 
 	if [[ "${MQTT_PASS}" ]]; then
-		echo "$LOG_DATE_FORMAT - Sending JSON data to ($MQTT_SERVER)..." &> /proc/1/fd/
+		echo "$LOG_DATE_FORMAT - Sending JSON data to ($MQTT_SERVER)..." &> /proc/1/fd/1
 		mqttwithpass
 
 	else
-		echo "$LOG_DATE_FORMAT - Sending JSON data to ($MQTT_SERVER) with no authentication..." &> /proc/1/fd/
+		echo "$LOG_DATE_FORMAT - Sending JSON data to ($MQTT_SERVER) with no authentication..." &> /proc/1/fd/1
 		mqttnopass
 	fi
 
-	echo "$LOG_DATE_FORMAT - Cleaning up for the next run..." &> /proc/1/fd/
+	echo "$LOG_DATE_FORMAT - Cleaning up for the next run..." &> /proc/1/fd/1
 	rm $RESULTS_PATH
-	echo "$LOG_DATE_FORMAT - First run is complete. License and GDPR have been accepted." &> /proc/1/fd/
-	echo "$LOG_DATE_FORMAT - Finished..." &> /proc/1/fd/
+	echo "$LOG_DATE_FORMAT - First run is complete. License and GDPR have been accepted." &> /proc/1/fd/1
+	echo "$LOG_DATE_FORMAT - Finished..." &> /proc/1/fd/1
 else
 	#if container has been started before, stdout is fine, no license acceptance
 	touch $RESULTS_PATH
 
 	if [[ "${SERVER_ID}" ]]; then
-		echo "$LOG_DATE_FORMAT - Running Ookla speed test using specified server..." &> /proc/1/fd/
+		echo "$LOG_DATE_FORMAT - Running Ookla speed test using specified server..." &> /proc/1/fd/1
 		speedtest --server-id=$SERVER_ID --format=$RESULTS_FORMAT &> $RESULTS_PATH
 	else
-		echo "$LOG_DATE_FORMAT - Running Ookla speed test..." &> /proc/1/fd/
+		echo "$LOG_DATE_FORMAT - Running Ookla speed test..." &> /proc/1/fd/1
 		speedtest --format=$RESULTS_FORMAT &> $RESULTS_PATH
 	fi
 
@@ -67,14 +67,14 @@ else
 	convertmbps
 
 	if [[ "${MQTT_PASS}" ]]; then
-		echo "$LOG_DATE_FORMAT - Sending JSON data to ($MQTT_SERVER)..." &> /proc/1/fd/
+		echo "$LOG_DATE_FORMAT - Sending JSON data to ($MQTT_SERVER)..." &> /proc/1/fd/1
 		mqttwithpass
 	else
-		echo "$LOG_DATE_FORMAT - Sending JSON data to ($MQTT_SERVER) with no authentication..." &> /proc/1/fd/
+		echo "$LOG_DATE_FORMAT - Sending JSON data to ($MQTT_SERVER) with no authentication..." &> /proc/1/fd/1
 		mqttnopass
 	fi
 
-	echo "$LOG_DATE_FORMAT - Cleaning up for the next run..." &> /proc/1/fd/
+	echo "$LOG_DATE_FORMAT - Cleaning up for the next run..." &> /proc/1/fd/1
 	rm $RESULTS_PATH
-	echo "$LOG_DATE_FORMAT - Finished..." &> /proc/1/fd/
+	echo "$LOG_DATE_FORMAT - Finished..." &> /proc/1/fd/1
 fi

@@ -4,7 +4,7 @@ LABEL maintainer="Chris Campbell"
 
 ARG SPEEDTEST_CLI_VERSION="1.2.0"
 
-RUN apt udpate && apt full-upgrade -y
+RUN apt update && apt full-upgrade -y
 RUN apt install tzdata bash curl wget jq bc moreutils mosquitto-clients -y
 RUN apt clean && apt autoremove -y
 

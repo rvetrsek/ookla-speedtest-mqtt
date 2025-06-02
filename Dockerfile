@@ -20,4 +20,6 @@ ENV TZ=
 COPY speedtest.sh /usr/bin
 RUN ["chmod", "+x", "/usr/bin/speedtest.sh"]
 
-CMD /usr/bin/speedtest.sh
+RUN echo "0 * * * * /usr/bin/speedtest.sh" | crontab -
+
+CMD ["cron", "-f"]

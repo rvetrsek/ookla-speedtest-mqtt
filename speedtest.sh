@@ -50,8 +50,8 @@ if [ ! -f $FIRST_START_PATH ]; then
 	echo "$LOG_DATE_FORMAT - Cleaning up for the next run..."
 	rm $RESULTS_PATH
 	echo "$LOG_DATE_FORMAT - First run is complete. License and GDPR have been accepted."
-	echo "$LOG_DATE_FORMAT - Sleeping for $SLEEP Seconds..."
-	sleep $SLEEP
+	echo "$LOG_DATE_FORMAT - Finished..."
+	#sleep $SLEEP
 else
 	#if container has been started before, stdout is fine, no license acceptance
 	while true
@@ -79,7 +79,7 @@ else
 
 		echo "$LOG_DATE_FORMAT - Cleaning up for the next run..."
 		rm $RESULTS_PATH
-		echo "$LOG_DATE_FORMAT - Sleeping for $SLEEP Seconds..."
-		sleep $SLEEP
+		echo "$LOG_DATE_FORMAT - Finished..."
+		#sleep $SLEEP
 	done
 fi

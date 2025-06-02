@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#variables
+LOG_DATE_FORMAT="$(date +%D_%T)"
+
 #setup cron job
 echo "$LOG_DATE_FORMAT - Setting up cron job..." &> /proc/1/fd/1
 echo "0 * * * * /usr/bin/speedtest.sh" | crontab -  &> /proc/1/fd/1

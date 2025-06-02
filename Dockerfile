@@ -5,7 +5,7 @@ LABEL maintainer="Chris Campbell"
 ARG SPEEDTEST_CLI_VERSION="1.2.0"
 
 RUN apt update && apt full-upgrade -y
-RUN apt install tzdata bash cron curl wget jq bc moreutils mosquitto-clients -y
+RUN apt install tzdata bash cron curl wget nano jq bc moreutils mosquitto-clients -y
 RUN apt clean && apt autoremove -y
 
 RUN wget https://install.speedtest.net/app/cli/ookla-speedtest-${SPEEDTEST_CLI_VERSION}-linux-x86_64.tgz -O /tmp/ookla-speedtest.tgz

@@ -19,7 +19,7 @@ RUN rm /tmp/ookla-speedtest.tgz
 COPY speedtest.sh /usr/bin
 RUN chmod +x /usr/bin/speedtest.sh
 
-RUN echo "0 * * * * /usr/bin/speedtest.sh" | crontab -
-RUN printenv > /etc/environment
+COPY entrypoint.sh /usr/bin
+RUN chmod +x /usr/bin/entrypoint.sh
 
-CMD ["cron", "-f"]
+ENTRYPOINT ["entrypoint.sh"]

@@ -77,5 +77,4 @@ else
 	echo "$LOG_DATE_FORMAT - Cleaning up for the next run..." &> /proc/1/fd/
 	rm $RESULTS_PATH
 	echo "$LOG_DATE_FORMAT - Finished..." &> /proc/1/fd/
-done
 fi

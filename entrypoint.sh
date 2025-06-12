@@ -37,4 +37,4 @@ printenv > /etc/environment
 
 #run cron in forground to keep container alive
 echo "$LOG_DATE_FORMAT - Running cron in foreground..." &> /proc/1/fd/1
-cron -f  &> /proc/1/fd/
+cron -f  &> /proc/1/fd/1

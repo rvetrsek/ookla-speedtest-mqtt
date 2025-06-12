@@ -9,9 +9,9 @@ A simple container designed to send JSON formatted Ookla speed test results over
 
 **MQTT_TOPIC:** Topic for speed test results
 
-**SLEEP:** Seconds between speed test runs
+**CRON:** Cron schedule expression - "0 * * * *" - define how often tests are run
 
-**TZ:** Set timezone. Uses standard tz database format - America/New_York
+**TZ:** Set timezone - Uses standard tz database format - America/New_York
 
 ### Optional environment variables:
 
@@ -23,7 +23,7 @@ A simple container designed to send JSON formatted Ookla speed test results over
 
 ### Example:
 ```
-docker run -d -e MQTT_TOPIC='ookla-speedtest/results' -e MQTT_SERVER_='192.168.1.10' -e SLEEP='3600' -e TZ='America/New_York' ccmpbll/ookla-speedtest-mqtt:latest
+docker run -d -e MQTT_TOPIC='ookla-speedtest/results' -e MQTT_SERVER_='192.168.1.10' -e CRON='0 * * * *' -e TZ='America/New_York' ccmpbll/ookla-speedtest-mqtt:latest
 ```
 
 ### Telegraf Config Example:

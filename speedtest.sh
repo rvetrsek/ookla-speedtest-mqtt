@@ -47,6 +47,8 @@ if [ ! -f $FIRST_START_PATH ]; then
 		mqttnopass
 	fi
 
+	echo "$LOG_DATE_FORMAT - Sending JSON results to log for troubleshooting..." &> /proc/1/fd/1
+	echo $(<$RESULTS_PATH) &> /proc/1/fd/1
 	echo "$LOG_DATE_FORMAT - Cleaning up for the next run..." &> /proc/1/fd/1
 	rm $RESULTS_PATH
 	echo "$LOG_DATE_FORMAT - First run is complete. License and GDPR have been accepted." &> /proc/1/fd/1
@@ -73,7 +75,9 @@ else
 		echo "$LOG_DATE_FORMAT - Sending JSON data to $MQTT_SERVER with no authentication..." &> /proc/1/fd/1
 		mqttnopass
 	fi
-
+	
+	echo "$LOG_DATE_FORMAT - Sending JSON results to log for troubleshooting..." &> /proc/1/fd/1
+	echo $(<$RESULTS_PATH) &> /proc/1/fd/1
 	echo "$LOG_DATE_FORMAT - Cleaning up for the next run..." &> /proc/1/fd/1
 	rm $RESULTS_PATH
 	echo "$LOG_DATE_FORMAT - Finished..." &> /proc/1/fd/1

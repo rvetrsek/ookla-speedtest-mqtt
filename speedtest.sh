@@ -1,16 +1,17 @@
 #!/bin/bash
 set -euo pipefail
+trap 'log "ERROR: speedtest.sh failed on line $LINENO"' ERR
 
-RESULTS_FORMAT="json-pretty"
+RESULTS_FORMAT="json"
 RESULTS_PATH="/tmp/speedtest-results"
 FIRST_START_PATH="/first_start"
 
 log() {
-    echo "$(date +%D_%T) - $*" > /proc/1/fd/1
+    echo "$(date +%D_%T) - $*" >> /proc/1/fd/1
 }
 
 convertmbps() {
-    jq '.download.bandwidth = (.download.bandwidth / 125000) | .upload.bandwidth = (.upload.bandwidth / 125000)' \
+    jq '.download.bandwidth = (.download.bandwidth / 125000.0) | .upload.bandwidth = (.upload.bandwidth / 125000.0)' \
         "$RESULTS_PATH" > "${RESULTS_PATH}.tmp" && mv "${RESULTS_PATH}.tmp" "$RESULTS_PATH"
 }
 
@@ -52,7 +53,7 @@ convertmbps
 publish_mqtt
 
 log "Sending JSON results to log for troubleshooting..."
-cat "$RESULTS_PATH" > /proc/1/fd/1
+cat "$RESULTS_PATH" >> /proc/1/fd/1
 log "Cleaning up for the next run..."
 rm "$RESULTS_PATH"
 log "Finished..."

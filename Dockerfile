@@ -14,12 +14,12 @@ RUN apt-get update && apt-get full-upgrade -y \
     && mv /tmp/speedtest /bin/speedtest \
     && chmod +x /bin/speedtest \
     && rm /tmp/ookla-speedtest.tgz \
+    && apt-get remove -y wget \
     && apt-get clean \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-COPY speedtest.sh /usr/bin/
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/speedtest.sh /usr/bin/entrypoint.sh
+COPY --chmod=755 speedtest.sh /usr/bin/
+COPY --chmod=755 entrypoint.sh /usr/bin/
 
 ENTRYPOINT ["entrypoint.sh"]

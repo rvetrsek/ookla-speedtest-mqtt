@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-    echo "$(date +%D_%T) - $*" > /proc/1/fd/1
+    echo "$(date +%D_%T) - $*" >> /proc/1/fd/1
 }
 
 # Validate required environment variables
@@ -26,17 +26,17 @@ else
 fi
 
 log "Setting up cron job..."
-echo "$CRON /usr/bin/speedtest.sh" | crontab -
+echo "$CRON /usr/bin/speedtest.sh" | crontab - || { log "ERROR: Failed to install crontab. Exiting."; exit 1; }
 
 # Export only the variables speedtest.sh needs so cron can see them
 {
-    echo "MQTT_SERVER=$MQTT_SERVER"
-    echo "MQTT_TOPIC=$MQTT_TOPIC"
-    [ -n "${MQTT_USER:-}" ] && echo "MQTT_USER=$MQTT_USER"
-    [ -n "${MQTT_PASS:-}" ] && echo "MQTT_PASS=$MQTT_PASS"
-    [ -n "${SERVER_ID:-}" ] && echo "SERVER_ID=$SERVER_ID"
-    [ -n "${TZ:-}" ] && echo "TZ=$TZ"
+    echo "MQTT_SERVER=\"$MQTT_SERVER\""
+    echo "MQTT_TOPIC=\"$MQTT_TOPIC\""
+    [ -n "${MQTT_USER:-}" ] && echo "MQTT_USER=\"$MQTT_USER\""
+    [ -n "${MQTT_PASS:-}" ] && echo "MQTT_PASS=\"$MQTT_PASS\""
+    [ -n "${SERVER_ID:-}" ] && echo "SERVER_ID=\"$SERVER_ID\""
+    [ -n "${TZ:-}" ] && echo "TZ=\"$TZ\""
 } > /etc/environment
 
 log "Running cron in foreground..."
-cron -f > /proc/1/fd/1
+exec cron -f

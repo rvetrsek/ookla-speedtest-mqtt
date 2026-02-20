@@ -5,21 +5,21 @@ LABEL maintainer="Chris Campbell"
 ARG SPEEDTEST_CLI_VERSION="1.2.0"
 ENV TZ=
 
-RUN apt update && apt full-upgrade -y
-RUN apt install tzdata bash cron curl wget nano jq bc moreutils mosquitto-clients -y
-RUN apt clean && apt autoremove -y
+RUN apt-get update && apt-get full-upgrade -y \
+    && apt-get install -y --no-install-recommends \
+        tzdata bash cron wget jq mosquitto-clients \
+    && wget -q https://install.speedtest.net/app/cli/ookla-speedtest-${SPEEDTEST_CLI_VERSION}-linux-x86_64.tgz \
+        -O /tmp/ookla-speedtest.tgz \
+    && tar zxf /tmp/ookla-speedtest.tgz -C /tmp speedtest \
+    && mv /tmp/speedtest /bin/speedtest \
+    && chmod +x /bin/speedtest \
+    && rm /tmp/ookla-speedtest.tgz \
+    && apt-get clean \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://install.speedtest.net/app/cli/ookla-speedtest-${SPEEDTEST_CLI_VERSION}-linux-x86_64.tgz -O /tmp/ookla-speedtest.tgz
-
-RUN tar zxvf /tmp/ookla-speedtest.tgz -C /tmp speedtest
-RUN mv /tmp/speedtest /bin/speedtest
-RUN chmod +x /bin/speedtest
-RUN rm /tmp/ookla-speedtest.tgz
-
-COPY speedtest.sh /usr/bin
-RUN chmod +x /usr/bin/speedtest.sh
-
-COPY entrypoint.sh /usr/bin
-RUN chmod +x /usr/bin/entrypoint.sh
+COPY speedtest.sh /usr/bin/
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/speedtest.sh /usr/bin/entrypoint.sh
 
 ENTRYPOINT ["entrypoint.sh"]

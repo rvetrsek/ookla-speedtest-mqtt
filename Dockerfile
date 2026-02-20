@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 LABEL Name=ookla-speedtest-mqtt
 LABEL maintainer="Chris Campbell"
 
@@ -7,7 +7,7 @@ ENV TZ=
 
 RUN apt-get update && apt-get full-upgrade -y \
     && apt-get install -y --no-install-recommends \
-        tzdata bash cron wget jq mosquitto-clients \
+        ca-certificates tzdata bash cron wget jq mosquitto-clients \
     && wget -q https://install.speedtest.net/app/cli/ookla-speedtest-${SPEEDTEST_CLI_VERSION}-linux-x86_64.tgz \
         -O /tmp/ookla-speedtest.tgz \
     && tar zxf /tmp/ookla-speedtest.tgz -C /tmp speedtest \

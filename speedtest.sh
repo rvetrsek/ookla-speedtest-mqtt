@@ -1,13 +1,22 @@
 #!/bin/bash
 set -euo pipefail
-trap 'log "ERROR: speedtest.sh failed on line $LINENO"' ERR
+trap 'rc=$?; log "ERROR: speedtest.sh failed on line $LINENO (exit code $rc)"' ERR
 
 RESULTS_FORMAT="json"
 RESULTS_PATH="/tmp/speedtest-results"
+SPEEDTEST_STDERR="/tmp/speedtest-results.err"
 FIRST_START_PATH="/first_start"
 
 log() {
   echo "$(date +%D_%T) - $*" >>/proc/1/fd/1
+}
+
+dump_file_to_log() {
+  local label="$1" path="$2"
+  if [ -s "$path" ]; then
+    log "$label:"
+    cat "$path" >>/proc/1/fd/1
+  fi
 }
 
 convertmbps() {
@@ -41,8 +50,28 @@ else
 fi
 
 touch "$RESULTS_PATH"
+: >"$SPEEDTEST_STDERR"
+log "speedtest args: $SPEEDTEST_ARGS"
+
+# Run speedtest, capturing stderr so we can see why it failed (cron has no MTA).
+# Disable -e around the call so we can format diagnostics before exiting.
+set +e
 # shellcheck disable=SC2086
-speedtest $SPEEDTEST_ARGS >"$RESULTS_PATH"
+speedtest $SPEEDTEST_ARGS >"$RESULTS_PATH" 2>"$SPEEDTEST_STDERR"
+rc=$?
+set -e
+
+if [ "$rc" -ne 0 ]; then
+  log "ERROR: speedtest exited with code $rc"
+  dump_file_to_log "speedtest stderr" "$SPEEDTEST_STDERR"
+  dump_file_to_log "speedtest stdout" "$RESULTS_PATH"
+  rm -f "$SPEEDTEST_STDERR" "$RESULTS_PATH"
+  exit "$rc"
+fi
+
+# Surface any stderr noise even on success (warnings, deprecations, etc.)
+dump_file_to_log "speedtest stderr (non-fatal)" "$SPEEDTEST_STDERR"
+rm -f "$SPEEDTEST_STDERR"
 
 # Strip any license/GDPR preamble that appears before the JSON on first run
 if ! head -1 "$RESULTS_PATH" | grep -q '^{'; then
